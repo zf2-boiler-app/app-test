@@ -1,0 +1,25 @@
+{
+    "name": "zf2-boiler-app/app-php-unit",
+    "license": "MIT",
+    "type": "library",
+    "description": "ZF2 BoilerApp PHPUnit module",
+    "keywords": ["Zend Framework 2","ZF2 Boiler-App","PHPUnit"],
+    "authors": [
+        {
+            "name": "Neilime",
+            "role": "Developer"
+        }
+    ],
+    "minimum-stability" : "dev",
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zendframework": "dev-master",
+        "phpunit/phpunit": "3.7.*"      
+    },
+    "autoload": {
+        "psr-0": {
+            "BoilerAppDb": "src"
+        },
+        "classmap" : ["Module.php"]
+    }
+}
