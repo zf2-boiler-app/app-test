@@ -20,6 +20,6 @@
         "psr-0": {
             "BoilerAppPHPUnit": "src"
         },
-        "classmap" : ["Module.php"]
+        "classmap" : ["autoload_classmap.php"]
     }
 }
