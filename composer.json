@@ -18,8 +18,7 @@
     },
     "autoload": {
         "psr-0": {
-            "BoilerAppPHPUnit": "src"
-        },
-        "classmap" : ["autoload_classmap.php"]
+            "BoilerAppPHPUnit\\Phpunit\\Testcase": "src"
+        }
     }
 }
