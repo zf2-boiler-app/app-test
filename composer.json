@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-0": {
-            "BoilerAppPHPUnit\\Phpunit\\Testcase": "src"
+            "BoilerAppPHPUnit": "src"
         }
     }
 }
