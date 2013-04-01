@@ -7,8 +7,9 @@ abstract class ModuleTestCase extends \BoilerAppPHPUnit\PHPUnit\TestCase\Abstrac
 	 * @see PHPUnit_Framework_TestCase::setUp()
 	 */
 	protected function setUp(){
-		$sModuleClass = preg_replace('/Test$/','', __NAMESPACE__).'\Module';
-		$this->module = new $sModuleClass();
+		parent::setUp();
+		if(class_exists($sModuleClass = preg_replace('/Test$/','', current(explode('\\', get_called_class()))).'\Module'))$this->module = new $sModuleClass();
+		else throw new \LogicException('Module class "'.$sModuleClass.'" does not exits');		
 	}
 
 	public function testGetConfig(){

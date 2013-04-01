@@ -11,15 +11,15 @@ abstract class DoctrineTestCase extends AbstractTestCase{
      */
     protected $tmpDir;
 
-    public function setUp(){
+    protected function setUp(){
         parent::setup();
-        $this->entityManager = $this->getServiceManager()->get($this->emAlias);
+        /*$this->entityManager = $this->getServiceManager()->get($this->emAlias);
         if($this->tmpDir && !is_dir($this->tmpDir))mkdir($this->tmpDir);
         if($sMetadatas = $this->entityManager->getMetadataFactory()->getAllMetadata()){
             $oSchemaTool = new \Doctrine\ORM\SchemaTool($this->entityManager);
             $oSchemaTool->createSchema($sMetadatas);
         } 
-        else throw new \LogicException('Metadatas are undefined');
+        else throw new \LogicException('Metadatas are undefined');*/
     }
 
     public function tearDown(){
@@ -35,9 +35,9 @@ abstract class DoctrineTestCase extends AbstractTestCase{
         }
     }
 
-    public function testGetEntityManager(){
+    /*public function testGetEntityManager(){
         $this->assertInstanceOf('Doctrine\ORM\EntityManager',$this->getEntityManager());
-    }
+    }*/
 
     /**
      * @throws \LogicException

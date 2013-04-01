@@ -1,11 +1,18 @@
 <?php
 namespace BoilerAppPHPUnit\PHPUnit\TestCase;
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase{
-
-	public function setUp(){
+	/**
+	 * @var \Zend\ServiceManager\ServiceManager
+	 */
+	protected $serviceManager;
+	
+	protected function setUp(){		
 		//Retrieve service manager from bootstrap
-
-		$this->serviceManager = $this->application->getServiceManager();
+		if(class_exists($sBootstrapClass = current(explode('\\', get_called_class())).'\Bootstrap')){
+			if(is_callable(array($sBootstrapClass,'getServiceManager')))$this->serviceManager = call_user_func(array($sBootstrapClass,'getServiceManager'));
+			else throw new \BadMethodCallException('Method "getServiceManager" is not callable in "'.$sBootstrapClass.'" class');
+		}
+		else throw new \LogicException('Bootstrap class "'.$sBootstrapClass.'" does not exist');
 	}
 
 	public function tearDown(){
