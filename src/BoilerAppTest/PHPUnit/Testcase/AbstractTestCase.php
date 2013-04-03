@@ -1,5 +1,5 @@
 <?php
-namespace BoilerAppPHPUnit\PHPUnit\TestCase;
+namespace BoilerAppTest\PHPUnit\TestCase;
 abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase{
 	/**
 	 * @var \Zend\ServiceManager\ServiceManager

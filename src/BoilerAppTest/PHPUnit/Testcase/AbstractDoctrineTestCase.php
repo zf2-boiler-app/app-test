@@ -1,10 +1,15 @@
 <?php
-namespace BoilerAppPHPUnit\PHPUnit\TestCase;
-abstract class AbstractDoctrineTestCase extends \BoilerAppPHPUnit\PHPUnit\TestCase\AbstractTestCase{
+namespace BoilerAppTest\PHPUnit\TestCase;
+abstract class AbstractDoctrineTestCase extends \BoilerAppTest\PHPUnit\TestCase\AbstractTestCase{
     /**
      * @var \Doctrine\ORM\EntityManager
      */
     protected $entityManager;
+
+    /**
+     * @var \Doctrine\ORM\Tools\SchemaTool
+     */
+    protected $schemaTool;
 
     /**
      * @var \Doctrine\Common\DataFixtures\Purger\ORMPurger
@@ -17,7 +22,7 @@ abstract class AbstractDoctrineTestCase extends \BoilerAppPHPUnit\PHPUnit\TestCa
     protected $ormExcecutor;
 
     /**
-     * @see \BoilerAppPHPUnit\PHPUnit\TestCase\AbstractTestCase::setUp()
+     * @see \BoilerAppTest\PHPUnit\TestCase\AbstractTestCase::setUp()
      */
     protected function setUp(){
         parent::setup();
@@ -25,27 +30,27 @@ abstract class AbstractDoctrineTestCase extends \BoilerAppPHPUnit\PHPUnit\TestCa
         $oEntityManager = $this->getEntityManager();
 
         //Create database
-        if($aMetadatas = $oEntityManager->getMetadataFactory()->getAllMetadata()){
-        	$oSchemaTool = new \Doctrine\ORM\Tools\SchemaTool($oEntityManager);
-            $oSchemaTool->createSchema($aMetadatas);
-        }
+        if($aMetadatas = $oEntityManager->getMetadataFactory()->getAllMetadata())$this->getSchemaTool()->createSchema($aMetadatas);
         else throw new \LogicException('Metadatas are undefined');
     }
 
     /**
-     * @see \BoilerAppPHPUnit\PHPUnit\TestCase\AbstractTestCase::tearDown()
+     * @see \BoilerAppTest\PHPUnit\TestCase\AbstractTestCase::tearDown()
      */
     public function tearDown(){
-        parent::tearDown();
-        $oSchemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->getEntityManager());
-        $oSchemaTool->dropDatabase();
+    	//Purge old fixtures
+    	$this->getORMPurger()->purge();
+
+		//Drop database
+    	$this->getSchemaTool()->dropDatabase();
         unset($this->entityManager,$this->ormExcecutor);
+        parent::tearDown();
     }
 
     /**
      * @param array $aFixtures
      * @throws \InvalidArgumentException
-     * @return \BoilerAppPHPUnit\PHPUnit\TestCase\DoctrineTestCase
+     * @return \BoilerAppTest\PHPUnit\TestCase\DoctrineTestCase
      */
     protected function addFixtures(array $aFixtures){
     	//Purge old fixtures
@@ -73,8 +78,12 @@ abstract class AbstractDoctrineTestCase extends \BoilerAppPHPUnit\PHPUnit\TestCa
 	    	}
 	    	if(!is_object($oFixture) || !($oFixture instanceof \Doctrine\Common\DataFixtures\FixtureInterface))throw new \InvalidArgumentException(sprintf(
 	    		'Fixture is not valid : "%s"',
-	    		is_object($oFixture)?get_class($oFixture):gettype($oFixture)
+	    		is_scalar($oFixture)?$oFixture:(is_object($oFixture)?get_class($oFixture):gettype($oFixture))
 	    	));
+
+	    	//Set service locator if needed
+	    	if($oFixture instanceof \Zend\ServiceManager\ServiceLocatorAwareInterface)$oFixture->setServiceLocator($this->getServiceManager());
+
 	    	$oLoader->addFixture($oFixture);
     	}
     	$this->getORMExecutor()->execute($oLoader->getFixtures());
@@ -91,12 +100,21 @@ abstract class AbstractDoctrineTestCase extends \BoilerAppPHPUnit\PHPUnit\TestCa
     }
 
     /**
+     * @throws \LogicException
+     * @return \Doctrine\ORM\Tools\SchemaTool
+     */
+    protected function getSchemaTool(){
+    	if($this->schemaTool instanceof \Doctrine\ORM\Tools\SchemaTool)return $this->schemaTool;
+    	return $this->schemaTool = new \Doctrine\ORM\Tools\SchemaTool($this->getEntityManager());
+    }
+
+    /**
      * @return \Doctrine\Common\DataFixtures\Purger\ORMPurger
      */
     protected function getORMPurger(){
     	if($this->ormPurger instanceof \Doctrine\Common\DataFixtures\Purger\ORMPurger)return $this->ormPurger;
     	//Initialize ORM Purger
-    	return $this->ormPurger = new \Doctrine\Common\DataFixtures\Purger\ORMPurger();
+    	return $this->ormPurger = new \Doctrine\Common\DataFixtures\Purger\ORMPurger($this->getEntityManager());
     }
 
     /**
@@ -113,6 +131,10 @@ abstract class AbstractDoctrineTestCase extends \BoilerAppPHPUnit\PHPUnit\TestCa
 
     public function testGetEntityManager(){
     	$this->assertInstanceOf('Doctrine\ORM\EntityManager',$this->getEntityManager());
+    }
+
+    public function testGetSchemaTool(){
+    	$this->assertInstanceOf('Doctrine\ORM\Tools\SchemaTool',$this->getSchemaTool());
     }
 
     public function testGetORMPurger(){

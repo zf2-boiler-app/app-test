@@ -1,5 +1,5 @@
 <?php
-namespace BoilerAppPHPUnit\PHPUnit;
+namespace BoilerAppTest;
 abstract class AbstractBootstrap{
     /**
      * @var \Zend\ServiceManager\ServiceManager
@@ -16,8 +16,8 @@ abstract class AbstractBootstrap{
      */
     public static function init(){
         //Load the user-defined test configuration file, if it exists;
-        if(is_readable($sConfigPath = __DIR__ . '/TestConfig.php'))$aTestConfig = include $sConfigPath;
-        elseif(is_readable($sConfigDistPath = __DIR__ . '/TestConfig.php.dist'))$aTestConfig = include $sConfigDistPath;
+        if(is_readable($sConfigPath = getcwd() . '/TestConfig.php'))$aTestConfig = include $sConfigPath;
+        elseif(is_readable($sConfigDistPath = getcwd() . '/TestConfig.php.dist'))$aTestConfig = include $sConfigDistPath;
         else throw new \LogicException('Config file ("'.$sConfigPath.'" or "'.$sConfigDistPath.'") does not exists');
 
         $aZf2ModulePaths = array();
@@ -38,8 +38,8 @@ abstract class AbstractBootstrap{
         static::$serviceManager = new \Zend\ServiceManager\ServiceManager(new \Zend\Mvc\Service\ServiceManagerConfig());
         static::$serviceManager->setService('ApplicationConfig',static::$config)->get('ModuleManager')->loadModules();
 
-        if(is_readable($sConfigurationPath = __DIR__.'/configuration.php')){
-        	$aConfiguration = \Zend\Stdlib\ArrayUtils::merge(static::$serviceManager->get('Config'),include __DIR__.'/configuration.php');
+        if(is_readable($sConfigurationPath = getcwd().'/configuration.php')){
+        	$aConfiguration = \Zend\Stdlib\ArrayUtils::merge(static::$serviceManager->get('Config'),include $sConfigurationPath);
         	$bAllowOverride = static::$serviceManager->getAllowOverride();
         	if(!$bAllowOverride)static::$serviceManager->setAllowOverride(true);
         	static::$serviceManager->setService('Config',$aConfiguration)->setAllowOverride($bAllowOverride);
@@ -65,11 +65,16 @@ abstract class AbstractBootstrap{
      * @throws RuntimeException
      */
     protected static function initAutoloader(){
-        if(is_readable($sAutoloadPath = static::findParentPath('vendor').'/autoload.php'))include $sAutoloadPath;
+        if(is_readable($sAutoloadPath = static::findParentPath('vendor').DIRECTORY_SEPARATOR.'autoload.php'))include $sAutoloadPath;
         if(!class_exists('Zend\Loader\AutoloaderFactory'))throw new \RuntimeException('Unable to load ZF2. Install required libraries through `composer`');
 
-        $aNamespaces = array(__NAMESPACE__ => __DIR__ . '/' . __NAMESPACE__);
-        if(is_dir($sFixturesDir = __DIR__ . '/Fixture'))$aNamespaces[__NAMESPACE__.'\Fixture'] = $sFixturesDir;
+        $oReflectionClass = new \ReflectionClass(get_called_class());
+        $sNamespace = $oReflectionClass->getNamespaceName();
+
+        $aNamespaces = array();
+        if(is_dir($sFixturesDir = getcwd().DIRECTORY_SEPARATOR.'Fixture'))$aNamespaces[$sNamespace.'\Fixture'] = $sFixturesDir;
+        $aNamespaces[$sNamespace] = getcwd().DIRECTORY_SEPARATOR.$sNamespace;
+
         \Zend\Loader\AutoloaderFactory::factory(array(
             'Zend\Loader\StandardAutoloader' => array(
                 'autoregister_zf' => true,
@@ -84,7 +89,7 @@ abstract class AbstractBootstrap{
      * @return boolean|string
      */
     protected static function findParentPath($sPath){
-        $sCurrentDir = __DIR__;
+        $sCurrentDir = getcwd();
         $sPreviousDir = '.';
         while(!is_dir($sPreviousDir . '/' . $sPath)){
             $sCurrentDir = dirname($sCurrentDir);

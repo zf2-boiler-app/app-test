@@ -1,9 +1,9 @@
 {
-    "name": "zf2-boiler-app/app-php-unit",
+    "name": "zf2-boiler-app/app-test",
     "license": "MIT",
     "type": "library",
     "description": "ZF2 BoilerApp PHPUnit module",
-    "keywords": ["Zend Framework 2","ZF2 Boiler-App","PHPUnit"],
+    "keywords": ["Zend Framework 2","ZF2 Boiler-App","tests","PHPUnit","Doctrine"],
     "authors": [
         {
             "name": "Neilime",
@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-0": {
-            "BoilerAppPHPUnit": "src"
+            "BoilerAppTest": "src"
         }
     }
 }
