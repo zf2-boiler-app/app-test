@@ -5,8 +5,11 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase{
 	 * @var \Zend\ServiceManager\ServiceManager
 	 */
 	protected $serviceManager;
-	
-	protected function setUp(){		
+
+	/**
+	 * @see PHPUnit_Framework_TestCase::setUp()
+	 */
+	protected function setUp(){
 		//Retrieve service manager from bootstrap
 		if(class_exists($sBootstrapClass = current(explode('\\', get_called_class())).'\Bootstrap')){
 			if(is_callable(array($sBootstrapClass,'getServiceManager')))$this->serviceManager = call_user_func(array($sBootstrapClass,'getServiceManager'));
@@ -15,12 +18,11 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase{
 		else throw new \LogicException('Bootstrap class "'.$sBootstrapClass.'" does not exist');
 	}
 
+	/**
+	 * @see PHPUnit_Framework_TestCase::tearDown()
+	 */
 	public function tearDown(){
 		unset($this->serviceManager);
-	}
-
-	public function testGetServiceManager(){
-		$this->assertInstanceOf('Zend\ServiceManager\ServiceManager',$this->getServiceManager());
 	}
 
 	/**
@@ -31,4 +33,9 @@ abstract class AbstractTestCase extends \PHPUnit_Framework_TestCase{
 		if($this->serviceManager instanceof \Zend\ServiceManager\ServiceManager)return $this->serviceManager;
 		throw new \LogicException('Service manager is undefined');
 	}
+
+	public function testGetServiceManager(){
+		$this->assertInstanceOf('Zend\ServiceManager\ServiceManager',$this->getServiceManager());
+	}
 }
+

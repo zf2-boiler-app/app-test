@@ -1,6 +1,6 @@
 <?php
 namespace BoilerAppPHPUnit\PHPUnit\TestCase;
-abstract class ModuleTestCase extends \BoilerAppPHPUnit\PHPUnit\TestCase\AbstractTestCase{
+abstract class AbstractModuleTestCase extends \BoilerAppPHPUnit\PHPUnit\TestCase\AbstractTestCase{
 	protected $module;
 
 	/**
@@ -9,7 +9,7 @@ abstract class ModuleTestCase extends \BoilerAppPHPUnit\PHPUnit\TestCase\Abstrac
 	protected function setUp(){
 		parent::setUp();
 		if(class_exists($sModuleClass = preg_replace('/Test$/','', current(explode('\\', get_called_class()))).'\Module'))$this->module = new $sModuleClass();
-		else throw new \LogicException('Module class "'.$sModuleClass.'" does not exits');		
+		else throw new \LogicException('Module class "'.$sModuleClass.'" does not exits');
 	}
 
 	public function testGetConfig(){
