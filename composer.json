@@ -15,6 +15,7 @@
         "php": ">=5.3.3",
         "zendframework/zendframework": "dev-master",
         "phpunit/phpunit": "3.7.*",
+        "doctrine/orm": "dev-master",
         "doctrine/data-fixtures": "dev-master"
     },
     "autoload": {
