@@ -8,6 +8,9 @@ return array(
 	'BoilerAppTest\PHPUnit\Testcase\AbstractModuleTestCase' => __DIR__.'/src/BoilerAppTest/PHPUnit/Testcase/AbstractModuleTestCase.php',
 	'BoilerAppTest\PHPUnit\Testcase\AbstractTestCase' => __DIR__.'/src/BoilerAppTest/PHPUnit/Testcase/AbstractTestCase.php',
 
+	//Doctrine
+	'BoilerAppTest\Doctrine\DoctrineUtilsTrait' => __DIR__.'/src/BoilerAppTest/Doctrine/DoctrineUtilsTrait.php',
+
 	//Fixture
 	'BoilerAppTest\Doctrine\Common\DataFixtures\AbstractFixture' => __DIR__.'/src/BoilerAppTest/Doctrine/Common/DataFixtures/AbstractFixture.php'
 );

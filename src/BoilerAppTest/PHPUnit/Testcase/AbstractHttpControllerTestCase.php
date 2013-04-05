@@ -1,6 +1,8 @@
 <?php
 namespace BoilerAppTest\PHPUnit\TestCase;
 abstract class AbstractHttpControllerTestCase extends \Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase{
+	use \BoilerAppTest\Dotrine\DoctrineUtilsTrait;
+
 	/**
 	 * @see PHPUnit_Framework_TestCase::setUp()
 	 */
@@ -13,4 +15,18 @@ abstract class AbstractHttpControllerTestCase extends \Zend\Test\PHPUnit\Control
 		else throw new \LogicException('Bootstrap class "'.$sBootstrapClass.'" does not exist');
 		parent::setUp();
 	}
+
+	/**
+	 * @see \Zend\Test\PHPUnit\Controller\AbstractControllerTestCase::tearDown()
+	 */
+	public function tearDown(){
+		//Purge old fixtures
+		$this->getORMPurger()->purge();
+
+		//Drop database
+		$this->getSchemaTool()->dropDatabase();
+		unset($this->entityManager,$this->ormExcecutor);
+		parent::tearDown();
+	}
+
 }
