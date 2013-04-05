@@ -1,18 +1,14 @@
 <?php
 namespace BoilerAppTest\PHPUnit\TestCase;
 abstract class AbstractDoctrineTestCase extends \BoilerAppTest\PHPUnit\TestCase\AbstractTestCase{
-	use \BoilerAppTest\Dotrine\DoctrineUtilsTrait;
+	use \BoilerAppTest\Doctrine\DoctrineUtilsTrait;
 
     /**
      * @see \BoilerAppTest\PHPUnit\TestCase\AbstractTestCase::tearDown()
      */
     public function tearDown(){
-    	//Purge old fixtures
-    	$this->getORMPurger()->purge();
-
-		//Drop database
-    	$this->getSchemaTool()->dropDatabase();
-        unset($this->entityManager,$this->ormExcecutor);
+		$this->cleanDatabase();
+		unset($this->entityManager,$this->ormExcecutor,$this->schemaTool,$this->ormPurger);
         parent::tearDown();
     }
 

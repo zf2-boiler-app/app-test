@@ -1,6 +1,11 @@
 <?php
-namespace BoilerAppTest\Dotrine;
+namespace BoilerAppTest\Doctrine;
 trait DoctrineUtilsTrait{
+
+	/**
+	 * @var \Zend\ServiceManager\ServiceManager
+	 */
+	protected $serviceManager;
 
 	/**
 	 * @var boolean
@@ -33,12 +38,13 @@ trait DoctrineUtilsTrait{
 	 * @return \BoilerAppTest\Dotrine\DoctrineUtilsTrait
 	 */
     protected function addFixtures(array $aFixtures){
-
     	//Purge old fixtures
     	if($this->dbCreated)$this->getORMPurger()->purge();
    		//Create database
     	elseif($aMetadatas = $this->getEntityManager()->getMetadataFactory()->getAllMetadata()){
-    		$this->getSchemaTool()->createSchema($aMetadatas);
+    		$oSchemaTool = $this->getSchemaTool();
+    		$oSchemaTool->dropDatabase();
+    		$oSchemaTool->createSchema($aMetadatas);
     		$this->dbCreated = true;
     	}
     	else throw new \LogicException('Metadatas are undefined');
@@ -78,25 +84,38 @@ trait DoctrineUtilsTrait{
     }
 
     /**
-     * @throws \LogicException
-     * @return \Zend\ServiceManager\ServiceManager
+     * @return \BoilerAppTest\Dotrine\DoctrineUtilsTrait
      */
-    protected function getEntityManager(){
-    	if($this->entityManager instanceof \Doctrine\ORM\EntityManager)return $this->entityManager;
-		if(is_callable(array($this,'getServiceManager')))$oServiceManager =call_user_func(array($this,'getServiceManager'));
-		else{
-    		//Retrieve service manager from bootstrap
-    		if(class_exists($sBootstrapClass = current(explode('\\', get_called_class())).'\Bootstrap')){
-    			if(is_callable(array($sBootstrapClass,'getServiceManager')))$oServiceManager = call_user_func(array($sBootstrapClass,'getServiceManager'));
-    			else throw new \BadMethodCallException('Method "getServiceManager" is not callable in "'.$sBootstrapClass.'" class');
-    		}
-    		else throw new \LogicException('Bootstrap class "'.$sBootstrapClass.'" does not exist');
-    	}
-    	return $this->entityManager = $oServiceManager->get('Doctrine\ORM\EntityManager');
+    protected function cleanDatabase(){
+   		//Drop database if created
+    	if($this->dbCreated)$this->getSchemaTool()->dropDatabase();
+    	return $this;
     }
 
     /**
      * @throws \LogicException
+     * @return \Zend\ServiceManager\ServiceManager
+     */
+    protected function getServiceManager(){
+    	if($this->serviceManager instanceof \Zend\ServiceManager\ServiceManager)return $this->serviceManager;
+    	//Retrieve service manager from bootstrap
+    	if(class_exists($sBootstrapClass = current(explode('\\', get_called_class())).'\Bootstrap')){
+    		if(is_callable(array($sBootstrapClass,'getServiceManager')))return $this->serviceManager = call_user_func(array($sBootstrapClass,'getServiceManager'));
+    		else throw new \BadMethodCallException('Method "getServiceManager" is not callable in "'.$sBootstrapClass.'" class');
+    	}
+    	else throw new \LogicException('Bootstrap class "'.$sBootstrapClass.'" does not exist');
+    }
+
+
+    /**
+     * @return \Doctrine\ORM\EntityManager
+     */
+    protected function getEntityManager(){
+    	if($this->entityManager instanceof \Doctrine\ORM\EntityManager)return $this->entityManager;
+		return $this->entityManager = $this->getServiceManager()->get('Doctrine\ORM\EntityManager');
+    }
+
+    /**
      * @return \Doctrine\ORM\Tools\SchemaTool
      */
     protected function getSchemaTool(){
