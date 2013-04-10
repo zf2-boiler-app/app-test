@@ -47,7 +47,7 @@ trait DoctrineUtilsTrait{
     	if(is_callable(array($this,'getServiceManager')))$oServiceManager = call_user_func(array($this,'getServiceManager'));
    		//Retrieve service manager from bootstrap
     	elseif(class_exists($sBootstrapClass = current(explode('\\', get_called_class())).'\Bootstrap')){
-    		if(is_callable(array($sBootstrapClass,'getServiceManager')))return $this->serviceManager = call_user_func(array($sBootstrapClass,'getServiceManager'));
+    		if(is_callable(array($sBootstrapClass,'getServiceManager')))$oServiceManager = call_user_func(array($sBootstrapClass,'getServiceManager'));
     		else throw new \BadMethodCallException('Method "getServiceManager" is not callable in "'.$sBootstrapClass.'" class');
     	}
     	else throw new \LogicException('Bootstrap class "'.$sBootstrapClass.'" does not exist');
@@ -106,7 +106,7 @@ trait DoctrineUtilsTrait{
     	if(is_callable(array($this,'getServiceManager')))$oServiceManager = call_user_func(array($this,'getServiceManager'));
     	//Retrieve service manager from bootstrap
     	elseif(class_exists($sBootstrapClass = current(explode('\\', get_called_class())).'\Bootstrap')){
-    		if(is_callable(array($sBootstrapClass,'getServiceManager')))return $this->serviceManager = call_user_func(array($sBootstrapClass,'getServiceManager'));
+    		if(is_callable(array($sBootstrapClass,'getServiceManager')))$oServiceManager = call_user_func(array($sBootstrapClass,'getServiceManager'));
     		else throw new \BadMethodCallException('Method "getServiceManager" is not callable in "'.$sBootstrapClass.'" class');
     	}
     	else throw new \LogicException('Bootstrap class "'.$sBootstrapClass.'" does not exist');
