@@ -12,14 +12,19 @@ abstract class AbstractBootstrap{
     private static $applicationConfig;
 
     /**
+     * @var string
+     */
+    private static $testsDir;
+
+    /**
      * Initialize bootstrap
      */
     public static function init(){
         static::initAutoloader();
 
         //Load the user-defined test configuration file, if it exists;
-        if(is_readable($sConfigPath = getcwd() . '/TestConfig.php'))$aTestConfig = include $sConfigPath;
-        elseif(is_readable($sConfigDistPath = getcwd() . '/TestConfig.php.dist'))$aTestConfig = include $sConfigDistPath;
+        if(is_readable($sConfigPath = self::getTestDir().'/TestConfig.php'))$aTestConfig = include $sConfigPath;
+        elseif(is_readable($sConfigDistPath = self::getTestDir().'/TestConfig.php.dist'))$aTestConfig = include $sConfigDistPath;
         else throw new \LogicException('Config file ("'.$sConfigPath.'" or "'.$sConfigDistPath.'") does not exists');
 
         $aZf2ModulePaths = array();
@@ -50,8 +55,8 @@ abstract class AbstractBootstrap{
     	$sNamespace = $oReflectionClass->getNamespaceName();
 
     	$aNamespaces = array();
-    	if(is_dir($sFixturesDir = getcwd().DIRECTORY_SEPARATOR.'Fixture'))$aNamespaces[$sNamespace.'\Fixture'] = $sFixturesDir;
-    	$aNamespaces[$sNamespace] = getcwd().DIRECTORY_SEPARATOR.$sNamespace;
+    	if(is_dir($sFixturesDir = self::getTestDir().DIRECTORY_SEPARATOR.'Fixture'))$aNamespaces[$sNamespace.'\Fixture'] = $sFixturesDir;
+    	$aNamespaces[$sNamespace] = self::getTestDir().DIRECTORY_SEPARATOR.$sNamespace;
 
     	\Zend\Loader\AutoloaderFactory::factory(array(
     		'Zend\Loader\StandardAutoloader' => array(
@@ -67,14 +72,13 @@ abstract class AbstractBootstrap{
      * @return boolean|string
      */
     private static function findParentPath($sPath){
-    	$sCurrentDir = getcwd();
-    	$sPreviousDir = '.';
-    	while(!is_dir($sPreviousDir . '/' . $sPath)){
+    	$sPreviousDir = $sCurrentDir = self::getTestDir();
+    	while(!is_dir($sPreviousDir.DIRECTORY_SEPARATOR.$sPath)){
     		$sCurrentDir = dirname($sCurrentDir);
     		if($sPreviousDir === $sCurrentDir)return false;
     		$sPreviousDir = $sCurrentDir;
     	}
-    	return $sCurrentDir . '/' . $sPath;
+    	return realpath($sCurrentDir.DIRECTORY_SEPARATOR.$sPath);
     }
 
     /**
@@ -114,5 +118,17 @@ abstract class AbstractBootstrap{
      */
     public static function getServiceManager(){
     	return self::getApplication()->getServiceManager();
+    }
+
+    /**
+     * Attempt to retrieve tests dir (same as Bootsrap.php)
+     * @throws \LogicException
+     * @return string
+     */
+    public static function getTestDir(){
+    	if(is_string(self::$testsDir))return self::$testsDir;
+    	$oReflectionClass = new \ReflectionClass(get_called_class());
+    	if($sFileName = $oReflectionClass->getFileName())return self::$testsDir = realpath(dirname($sFileName));
+    	throw new \LogicException('Unable to retrieve Bootstrap "'.$oReflectionClass->getName().'" filename.');
     }
 }
