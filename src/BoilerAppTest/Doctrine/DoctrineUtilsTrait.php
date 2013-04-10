@@ -1,12 +1,6 @@
 <?php
 namespace BoilerAppTest\Doctrine;
 trait DoctrineUtilsTrait{
-
-	/**
-	 * @var \Zend\ServiceManager\ServiceManager
-	 */
-	protected $serviceManager;
-
 	/**
 	 * @var boolean
 	 */
@@ -49,6 +43,15 @@ trait DoctrineUtilsTrait{
     	}
     	else throw new \LogicException('Metadatas are undefined');
 
+    	//Retrieve service manager from getServiceManager function
+    	if(is_callable(array($this,'getServiceManager')))$oServiceManager = call_user_func(array($this,'getServiceManager'));
+   		//Retrieve service manager from bootstrap
+    	elseif(class_exists($sBootstrapClass = current(explode('\\', get_called_class())).'\Bootstrap')){
+    		if(is_callable(array($sBootstrapClass,'getServiceManager')))return $this->serviceManager = call_user_func(array($sBootstrapClass,'getServiceManager'));
+    		else throw new \BadMethodCallException('Method "getServiceManager" is not callable in "'.$sBootstrapClass.'" class');
+    	}
+    	else throw new \LogicException('Bootstrap class "'.$sBootstrapClass.'" does not exist');
+
     	$oLoader = new \Doctrine\Common\DataFixtures\Loader();
     	foreach($aFixtures as $oFixture){
 	    	if(is_string($oFixture)){
@@ -75,7 +78,7 @@ trait DoctrineUtilsTrait{
 	    	));
 
 	    	//Set service locator if needed
-	    	if($oFixture instanceof \Zend\ServiceManager\ServiceLocatorAwareInterface)$oFixture->setServiceLocator($this->getServiceManager());
+	    	if($oFixture instanceof \Zend\ServiceManager\ServiceLocatorAwareInterface)$oFixture->setServiceLocator($oServiceManager);
 
 	    	$oLoader->addFixture($oFixture);
     	}
@@ -93,26 +96,21 @@ trait DoctrineUtilsTrait{
     }
 
     /**
+     * @throws \BadMethodCallException
      * @throws \LogicException
-     * @return \Zend\ServiceManager\ServiceManager
-     */
-    protected function getServiceManager(){
-    	if($this->serviceManager instanceof \Zend\ServiceManager\ServiceManager)return $this->serviceManager;
-    	//Retrieve service manager from bootstrap
-    	if(class_exists($sBootstrapClass = current(explode('\\', get_called_class())).'\Bootstrap')){
-    		if(is_callable(array($sBootstrapClass,'getServiceManager')))return $this->serviceManager = call_user_func(array($sBootstrapClass,'getServiceManager'));
-    		else throw new \BadMethodCallException('Method "getServiceManager" is not callable in "'.$sBootstrapClass.'" class');
-    	}
-    	else throw new \LogicException('Bootstrap class "'.$sBootstrapClass.'" does not exist');
-    }
-
-
-    /**
      * @return \Doctrine\ORM\EntityManager
      */
     protected function getEntityManager(){
     	if($this->entityManager instanceof \Doctrine\ORM\EntityManager)return $this->entityManager;
-		return $this->entityManager = $this->getServiceManager()->get('Doctrine\ORM\EntityManager');
+    	//Retrieve service manager from getServiceManager function
+    	if(is_callable(array($this,'getServiceManager')))$oServiceManager = call_user_func(array($this,'getServiceManager'));
+    	//Retrieve service manager from bootstrap
+    	elseif(class_exists($sBootstrapClass = current(explode('\\', get_called_class())).'\Bootstrap')){
+    		if(is_callable(array($sBootstrapClass,'getServiceManager')))return $this->serviceManager = call_user_func(array($sBootstrapClass,'getServiceManager'));
+    		else throw new \BadMethodCallException('Method "getServiceManager" is not callable in "'.$sBootstrapClass.'" class');
+    	}
+    	else throw new \LogicException('Bootstrap class "'.$sBootstrapClass.'" does not exist');
+    	return $this->entityManager = $oServiceManager->get('Doctrine\ORM\EntityManager');
     }
 
     /**
