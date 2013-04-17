@@ -17,6 +17,11 @@ abstract class AbstractBootstrap{
     private static $testsDir;
 
     /**
+     * @var boolean
+     */
+    private static $dbCreated = false;
+
+    /**
      * Initialize bootstrap
      */
     public static function init(){
@@ -130,5 +135,20 @@ abstract class AbstractBootstrap{
     	$oReflectionClass = new \ReflectionClass(get_called_class());
     	if($sFileName = $oReflectionClass->getFileName())return self::$testsDir = realpath(dirname($sFileName));
     	throw new \LogicException('Unable to retrieve Bootstrap "'.$oReflectionClass->getName().'" filename.');
+    }
+
+    /**
+     * @return boolean
+     */
+    public static function getDbCreated(){
+    	return self::$dbCreated;
+    }
+
+
+    /**
+     * @param boolean $bDbCreated
+     */
+    public static function setDbCreated($bDbCreated){
+    	self::$dbCreated = !!$bDbCreated;
     }
 }

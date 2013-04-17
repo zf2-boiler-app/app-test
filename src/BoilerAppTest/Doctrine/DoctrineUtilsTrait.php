@@ -1,10 +1,7 @@
 <?php
 namespace BoilerAppTest\Doctrine;
 trait DoctrineUtilsTrait{
-	/**
-	 * @var boolean
-	 */
-	protected $dbCreated = false;
+	use \BoilerAppTest\BootstrapFunctionsTrait;
 
 	/**
 	 * @var \Doctrine\ORM\EntityManager
@@ -33,13 +30,13 @@ trait DoctrineUtilsTrait{
 	 */
     protected function addFixtures(array $aFixtures){
     	//Purge old fixtures
-    	if($this->dbCreated)$this->getORMPurger()->purge();
+    	if($this->getDbCreated())$this->getORMPurger()->purge();
    		//Create database
     	elseif($aMetadatas = $this->getEntityManager()->getMetadataFactory()->getAllMetadata()){
     		$oSchemaTool = $this->getSchemaTool();
     		$oSchemaTool->dropDatabase();
     		$oSchemaTool->createSchema($aMetadatas);
-    		$this->dbCreated = true;
+    		$this->setDbCreated(true);
     	}
     	else throw new \LogicException('Metadatas are undefined');
 
@@ -83,15 +80,6 @@ trait DoctrineUtilsTrait{
 	    	$oLoader->addFixture($oFixture);
     	}
     	$this->getORMExecutor()->execute($oLoader->getFixtures());
-    	return $this;
-    }
-
-    /**
-     * @return \BoilerAppTest\Dotrine\DoctrineUtilsTrait
-     */
-    protected function cleanDatabase(){
-   		//Drop database if created
-    	if($this->dbCreated)$this->getSchemaTool()->dropDatabase();
     	return $this;
     }
 
@@ -140,5 +128,14 @@ trait DoctrineUtilsTrait{
     		$this->getEntityManager(),
     		$this->getORMPurger()
     	);
+    }
+
+    /**
+	 * @return \BoilerAppTest\Dotrine\DoctrineUtilsTrait
+     */
+    protected function cleanDatabase(){
+    	if($this->getDbCreated())$this->getSchemaTool()->dropDatabase();
+    	$this->setDbCreated(false);
+    	return $this;
     }
 }

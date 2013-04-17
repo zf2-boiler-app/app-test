@@ -21,7 +21,7 @@ abstract class AbstractHttpControllerTestCase extends \Zend\Test\PHPUnit\Control
 	 */
 	public function tearDown(){
 		$this->cleanDatabase();
-		unset($this->entityManager,$this->ormExcecutor,$this->schemaTool,$this->ormPurger);
+		unset($this->serviceManager,$this->entityManager,$this->ormExcecutor,$this->schemaTool,$this->ormPurger);
 		parent::tearDown();
 	}
 }
