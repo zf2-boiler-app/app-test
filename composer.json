@@ -10,6 +10,9 @@
             "role": "Developer"
         }
     ],
+    "support": {
+        "issues": "https://github.com/zf2-boiler-app/app-test/issues"
+    },
     "minimum-stability" : "dev",
     "require": {
         "php": ">=5.3.3",
@@ -21,6 +24,11 @@
     "autoload": {
         "psr-0": {
             "BoilerAppTest": "src"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
         }
     }
 }
