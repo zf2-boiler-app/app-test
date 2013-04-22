@@ -32,22 +32,7 @@ trait DoctrineUtilsTrait{
     	//Purge old fixtures
     	if($this->getDbCreated())$this->getORMPurger()->purge();
    		//Create database
-    	elseif($aMetadatas = $this->getEntityManager()->getMetadataFactory()->getAllMetadata()){
-    		$oSchemaTool = $this->getSchemaTool();
-    		$oSchemaTool->dropDatabase();
-    		$oSchemaTool->createSchema($aMetadatas);
-    		$this->setDbCreated(true);
-    	}
-    	else throw new \LogicException('Metadatas are undefined');
-
-    	//Retrieve service manager from getServiceManager function
-    	if(is_callable(array($this,'getServiceManager')))$oServiceManager = call_user_func(array($this,'getServiceManager'));
-   		//Retrieve service manager from bootstrap
-    	elseif(class_exists($sBootstrapClass = current(explode('\\', get_called_class())).'\Bootstrap')){
-    		if(is_callable(array($sBootstrapClass,'getServiceManager')))$oServiceManager = call_user_func(array($sBootstrapClass,'getServiceManager'));
-    		else throw new \BadMethodCallException('Method "getServiceManager" is not callable in "'.$sBootstrapClass.'" class');
-    	}
-    	else throw new \LogicException('Bootstrap class "'.$sBootstrapClass.'" does not exist');
+    	else $this->createDatabase();
 
     	$oLoader = new \Doctrine\Common\DataFixtures\Loader();
     	foreach($aFixtures as $oFixture){
@@ -75,7 +60,7 @@ trait DoctrineUtilsTrait{
 	    	));
 
 	    	//Set service locator if needed
-	    	if($oFixture instanceof \Zend\ServiceManager\ServiceLocatorAwareInterface)$oFixture->setServiceLocator($oServiceManager);
+	    	if($oFixture instanceof \Zend\ServiceManager\ServiceLocatorAwareInterface)$oFixture->setServiceLocator($this->getServiceManager());
 
 	    	$oLoader->addFixture($oFixture);
     	}
@@ -128,6 +113,22 @@ trait DoctrineUtilsTrait{
     		$this->getEntityManager(),
     		$this->getORMPurger()
     	);
+    }
+
+    /**
+     * @throws \LogicException
+     * @return \BoilerAppTest\Doctrine\DoctrineUtilsTrait
+     */
+    protected function createDatabase(){
+    	if($this->getDbCreated())return $this;
+    	if($aMetadatas = $this->getEntityManager()->getMetadataFactory()->getAllMetadata()){
+    		$oSchemaTool = $this->getSchemaTool();
+    		$oSchemaTool->dropDatabase();
+    		$oSchemaTool->createSchema($aMetadatas);
+    		$this->setDbCreated(true);
+    		return $this;
+    	}
+    	throw new \LogicException('Metadatas are undefined');
     }
 
     /**
