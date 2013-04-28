@@ -22,9 +22,7 @@
         "doctrine/data-fixtures": "1.0.*@dev"
     },
     "autoload": {
-        "classmap": {
-            "autoload_classmap.php"
-        }
+        "classmap": ["autoload_classmap.php"]
     },
     "extra": {
         "branch-alias": {
