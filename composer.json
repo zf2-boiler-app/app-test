@@ -22,7 +22,9 @@
         "doctrine/data-fixtures": "1.0.*@dev"
     },
     "autoload": {
-        "classmap": ["autoload_classmap.php"]
+        "psr-0": {
+            "BoilerAppTest": "src/"
+        }
     },
     "extra": {
         "branch-alias": {
