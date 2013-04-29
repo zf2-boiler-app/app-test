@@ -1,4 +1,4 @@
-ZF2 BoilerApp "Test" module
+ZF2 BoilerApp Test tools
 =====================
 
 Created by Neilime
@@ -9,7 +9,7 @@ If you want to contribute don't hesitate, I'll review any PR.
 Introduction
 ------------
 
-__ZF2 BoilerApp "Test" module__ is a Zend Framework 2 module
+__ZF2 BoilerApp "Test" module__ provides tools to test modules of ZF2 BoilerApp
 
 Requirements
 ------------
@@ -30,12 +30,12 @@ Installation
 1. Add this project in your composer.json:
 
     ```json
-    "require": {
+    "require-dev": {
         "zf2-boiler-app/app-test": "dev-master"
     }
     ```
 
-2. Now tell composer to download __ZF2 BoilerApp "Test" module__ by running the command:
+2. Now tell composer to download __ZF2 BoilerApp Test module__ by running the command:
 
     ```bash
     $ php composer.phar update
@@ -43,7 +43,7 @@ Installation
 
 #### Post installation
 
-1. Enabling it in your `application.config.php` file.
+1. Enabling it in your `TestConfig.php.dist` file.
 
     ```php
     return array(
@@ -55,4 +55,26 @@ Installation
     );
     ```
 
+2. Create the `Bootstrap.php` file
+
+    ```php
+    namespace MyModuleTest;
+    error_reporting(E_ALL | E_STRICT);
+    chdir(dirname(__DIR__));
+    if(is_readable($sBoilerAppTestBootstrapPath = __DIR__.'/../vendor/zf2-boiler-app/app-test/src/BoilerAppTest/AbstractBootstrap.php'))include $sBoilerAppTestBootstrapPath;
+    if(!class_exists('BoilerAppTest\AbstractBootstrap'))throw new \RuntimeException('Unable to load BoilerAppTest Bootstrap. Install required libraries through `composer`');
+    class Bootstrap extends \BoilerAppTest\AbstractBootstrap{}
+    Bootstrap::init();    
+    ```
+
 ## Features
+
+####Bootstraping
+
+- Application and test configuration autoloading
+- Service manager accessor
+
+####Doctrine
+
+- Database auto creator
+- Fixture autoloading
