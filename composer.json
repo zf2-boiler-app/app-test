@@ -2,7 +2,7 @@
     "name": "zf2-boiler-app/app-test",
     "license": "MIT",
     "type": "library",
-    "description": "ZF2 BoilerApp PHPUnit module",
+    "description": "ZF2 BoilerApp tests tools",
     "keywords": ["Zend Framework 2","ZF2 Boiler-App","tests","PHPUnit","Doctrine"],
     "authors": [
         {
@@ -13,7 +13,7 @@
     "support": {
         "issues": "https://github.com/zf2-boiler-app/app-test/issues"
     },
-    "minimum-stability" : "dev",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.3.*",
@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-0": {
-            "BoilerAppTest": "src"
+            "BoilerAppTest": "src/"
         }
     },
     "extra": {
