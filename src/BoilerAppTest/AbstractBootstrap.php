@@ -25,7 +25,10 @@ abstract class AbstractBootstrap{
      * Initialize bootstrap
      */
     public static function init(){
-        static::initAutoloader();
+        //No max execution time
+    	set_time_limit(0);
+
+    	static::initAutoloader();
 
         //Load the user-defined test configuration file, if it exists;
         if(is_readable($sConfigPath = self::getTestDir().'/TestConfig.php'))$aTestConfig = include $sConfigPath;
