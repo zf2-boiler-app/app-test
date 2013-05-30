@@ -33,12 +33,19 @@ abstract class AbstractBootstrap{
         //Load the user-defined test configuration file, if it exists;
         if(is_readable($sConfigPath = self::getTestDir().'/TestConfig.php'))$aTestConfig = include $sConfigPath;
         elseif(is_readable($sConfigDistPath = self::getTestDir().'/TestConfig.php.dist'))$aTestConfig = include $sConfigDistPath;
-        else throw new \LogicException('Config file ("'.$sConfigPath.'" or "'.$sConfigDistPath.'") does not exists');
+        else throw new \LogicException('Config file ("'.$sConfigPath.'" or "'.$sConfigDistPath.'") does not exist');
 
         $aZf2ModulePaths = array();
         if(isset($aTestConfig['module_listener_options']['module_paths']))foreach($aTestConfig['module_listener_options']['module_paths'] as $sModulePath){
         	if(($sPath = static::findParentPath($sModulePath)))$aZf2ModulePaths[] = $sPath;
         }
+
+        //Add default configuration file
+        if(file_exists($sDefaultConfigurationPath = __DIR__.DIRECTORY_SEPARATOR.'../../default-configuration.php')){
+        	if(isset($aTestConfig['module_listener_options']['config_glob_paths']))array_unshift($aTestConfig['module_listener_options']['config_glob_paths'],realpath($sDefaultConfigurationPath));
+        	else $aTestConfig['module_listener_options']['config_glob_paths'] = array($sDefaultConfigurationPath);
+        }
+        else throw new \LogicException('Default configuration file ("'.$sDefaultConfigurationPath.'") does not exist');
 
         //Use ModuleManager to load this module and it's dependencies
         self::setApplicationConfig(\Zend\Stdlib\ArrayUtils::merge(array(
