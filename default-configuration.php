@@ -15,9 +15,8 @@ return array(
 			)
 		)
 	),
-
 	'asset_bundle' => array(
-		'cachePath' => __DIR__.'/_files/cache',
+		'cachePath' => getcwd().'/tests/_files/cache',
 		'cacheUrl' => '@zfBaseUrl/cache/',
 		'assetsPath' => null
 	),
