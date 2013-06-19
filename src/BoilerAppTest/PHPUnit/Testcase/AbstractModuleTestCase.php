@@ -1,6 +1,6 @@
 <?php
 namespace BoilerAppTest\PHPUnit\TestCase;
-abstract class AbstractModuleTestCase extends \BoilerAppTest\PHPUnit\TestCase\AbstractDoctrineTestCase{
+abstract class AbstractModuleTestCase extends \PHPUnit_Framework_TestCase{
 	protected $module;
 
 	/**
