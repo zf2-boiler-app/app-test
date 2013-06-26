@@ -7,6 +7,7 @@ abstract class AbstractDoctrineTestCase extends \PHPUnit_Framework_TestCase{
      * @see \BoilerAppTest\PHPUnit\TestCase\AbstractTestCase::tearDown()
      */
     public function tearDown(){
+    	$this->getEntityManager()->clear();
     	$this->cleanDatabase();
 		unset($this->serviceManager,$this->entityManager,$this->ormExcecutor,$this->schemaTool,$this->ormPurger);
         parent::tearDown();
