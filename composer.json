@@ -16,10 +16,10 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zendframework": "2.3.*",
-        "phpunit/phpunit": "3.7.*",
-        "doctrine/orm": "2.4.*",
-        "doctrine/data-fixtures": "1.0.*"
+        "zendframework/zendframework": "dev-master",
+        "phpunit/phpunit": "dev-master",
+        "doctrine/orm": "dev-master",
+        "doctrine/data-fixtures": "dev-master"
     },
     "autoload": {
         "psr-0": {
