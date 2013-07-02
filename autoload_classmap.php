@@ -5,8 +5,8 @@ return array(
     'BoilerAppTest\BootstrapFunctionsTrait'                         => __DIR__ . '/src/BoilerAppTest/BootstrapFunctionsTrait.php',
     'BoilerAppTest\Doctrine\Common\DataFixtures\AbstractFixture'    => __DIR__ . '/src/BoilerAppTest/Doctrine/Common/DataFixtures/AbstractFixture.php',
     'BoilerAppTest\Doctrine\DoctrineUtilsTrait'                     => __DIR__ . '/src/BoilerAppTest/Doctrine/DoctrineUtilsTrait.php',
-    'BoilerAppTest\PHPUnit\TestCase\AbstractDoctrineTestCase'       => __DIR__ . '/src/BoilerAppTest/PHPUnit/Testcase/AbstractDoctrineTestCase.php',
-    'BoilerAppTest\PHPUnit\TestCase\AbstractHttpControllerTestCase' => __DIR__ . '/src/BoilerAppTest/PHPUnit/Testcase/AbstractHttpControllerTestCase.php',
-    'BoilerAppTest\PHPUnit\TestCase\AbstractModuleTestCase'         => __DIR__ . '/src/BoilerAppTest/PHPUnit/Testcase/AbstractModuleTestCase.php',
-    'BoilerAppTest\PHPUnit\TestCase\AbstractTestCase'               => __DIR__ . '/src/BoilerAppTest/PHPUnit/Testcase/AbstractTestCase.php',
+    'BoilerAppTest\PHPUnit\TestCase\AbstractDoctrineTestCase'       => __DIR__ . '/src/BoilerAppTest/PHPUnit/TestCase/AbstractDoctrineTestCase.php',
+    'BoilerAppTest\PHPUnit\TestCase\AbstractHttpControllerTestCase' => __DIR__ . '/src/BoilerAppTest/PHPUnit/TestCase/AbstractHttpControllerTestCase.php',
+    'BoilerAppTest\PHPUnit\TestCase\AbstractModuleTestCase'         => __DIR__ . '/src/BoilerAppTest/PHPUnit/TestCase/AbstractModuleTestCase.php',
+    'BoilerAppTest\PHPUnit\TestCase\AbstractTestCase'               => __DIR__ . '/src/BoilerAppTest/PHPUnit/TestCase/AbstractTestCase.php',
 );
