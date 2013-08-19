@@ -1,7 +1,9 @@
-ZF2 BoilerApp Test tools
+ZF2 BoilerApp "Test" module
 =====================
 
-Created by Neilime
+[![Build Status](https://travis-ci.org/zf2-boiler-app/app-test.png?branch=master)](https://travis-ci.org/zf2-boiler-app/app-test)
+[![Latest Stable Version](https://poser.pugx.org/zf2-boiler-app/app-test/v/stable.png)](https://packagist.org/packages/zf2-boiler-app/app-test)
+[![Total Downloads](https://poser.pugx.org/zf2-boiler-app/app-test/downloads.png)](https://packagist.org/packages/zf2-boiler-app/app-test)
 
 NOTE : This module is in heavy development, it's not usable yet.
 If you want to contribute don't hesitate, I'll review any PR.
@@ -9,7 +11,7 @@ If you want to contribute don't hesitate, I'll review any PR.
 Introduction
 ------------
 
-__ZF2 BoilerApp "Test" module__ provides tools to test modules of ZF2 BoilerApp
+__ZF2 BoilerApp "Test" module__ is a Zend Framework 2 module that provides tools to test modules of ZF2 BoilerApp
 
 Requirements
 ------------
