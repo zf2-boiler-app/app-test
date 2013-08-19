@@ -17,7 +17,7 @@
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "dev-master",
-        "phpunit/phpunit": "dev-master",
+        "phpunit/phpunit": "*@stable",
         "doctrine/orm": "dev-master",
         "doctrine/data-fixtures": "dev-master"
     },
