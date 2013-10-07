@@ -18,7 +18,7 @@
         "php": ">=5.4",
         "zendframework/zendframework": "dev-master",
         "phpunit/phpunit": "*@stable",
-        "doctrine/orm": "dev-master",
+        "doctrine/orm": ">=2.4",
         "doctrine/data-fixtures": "dev-master",
         "neilime/zf2-deploy-module": "dev-master"
     },
