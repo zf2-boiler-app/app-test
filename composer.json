@@ -19,7 +19,8 @@
         "zendframework/zendframework": "dev-master",
         "phpunit/phpunit": "*@stable",
         "doctrine/orm": "dev-master",
-        "doctrine/data-fixtures": "dev-master"
+        "doctrine/data-fixtures": "dev-master",
+        "neilime/zf2-deploy-module": "dev-master"
     },
     "autoload": {
         "psr-0": {
