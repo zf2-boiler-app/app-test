@@ -15,7 +15,7 @@
     },
     "minimum-stability": "dev",
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4",
         "zendframework/zendframework": "dev-master",
         "phpunit/phpunit": "*@stable",
         "doctrine/orm": "dev-master",
